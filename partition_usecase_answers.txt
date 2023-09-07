@@ -1,0 +1,39 @@
+1)create partition1 dataset in console.
+
+2)create table if not exists partition1.sample as select * FROM bigquery-public-data.chicago_taxi_trips.taxi_trips
+
+
+3)create table partition1.sample_partition(
+unique_key	STRING,			
+taxi_id	STRING,	
+trip_start_timestamp	TIMESTAMP,
+trip_end_timestamp	TIMESTAMP,
+trip_seconds	INTEGER,
+trip_miles	FLOAT64,
+pickup_census_tract	INTEGER,
+dropoff_census_tract	INTEGER,
+pickup_community_area	INTEGER,
+dropoff_community_area	INTEGER,
+fare	FLOAT64,
+tips	FLOAT64,
+tolls	FLOAT64,
+extras	FLOAT64,
+trip_total	FLOAT64,
+payment_type	STRING,
+company	STRING,
+pickup_latitude	FLOAT64,
+pickup_longitude	FLOAT64,
+pickup_location	STRING,
+dropoff_latitude	FLOAT64,
+dropoff_longitude	FLOAT64,
+dropoff_location	STRING)
+partition by
+date_trunc(trip_start_timestamp, month)
+cluster by  taxi_id;
+
+
+4)insert into partition1.sample_partition select * from partition1.sample
+
+
+5)select * from partition1.sample where trip_start_timestamp = "2023-05-19"
+select * from partition1.sample_partition where trip_start_timestamp = "2023-05-19"
